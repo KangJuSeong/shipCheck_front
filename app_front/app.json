@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "32div_app_Front",
-    "slug": "32div_app_Front",
+    "name": "app_front",
+    "slug": "app_front",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +17,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyD_uVclhpTJzL7IahitPMgWneBoYGXss3g"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +30,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "packagerOpts": {
+      "port": 57958
+    },
   }
 }
