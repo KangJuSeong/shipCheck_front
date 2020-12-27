@@ -2,67 +2,73 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, StatusBar, Image } from 'react-native';
 import * as base from 'native-base'
 import axios from 'axios'
+import {boatDetailRequest} from '../../utils/dataRequest'
+import {getToken} from '../../utils/getToken'
 
 
 export default class DetailScreen extends Component {
 	constructor(props){
 		super(props)
 		this.state = {
-			title: '',
-			price: '',
-			reserve: '',
-			product_status: '',
-			manufacturer: '',
-			brand: '',
-			model_code: '',
-			boat_img: '',
+            data : {
+                name: '',
+                imo: '',
+                calsign: '',
+                mmsi: '',
+                vessel_type: '',
+                build_year: '',
+                current_flag: '',
+                home_port: '',
+                main_img: '',
+                is_learning: false,
+            }
 		}
 		this.requestData = this.requestData(this)
 	}
-	componentDidMount() {this.requestData}
+	componentDidMount() {}
    
     requestData() {
-        const itemId = this.props.navigation.getParam('itemId')
-        axios.get('https://ship-server-rczvh.run.goorm.io/Boats/boat/'+itemId+'/').
-        then((response) => {
-            this.setState({
-                title: response.data['title'],
-				price: response.data['price'],
-				reserve: response.data['reserve'],
-				product_status: response.data['product_status'],
-				manufacturer: response.data['manufacturer'],
-				brand: response.data['brand'],
-				model_code: response.data['model_code'],
-				boat_img: response.data['boat_img'],
+        const id = this.props.navigation.getParam('itemId')
+        getToken().then((token) => {
+            boatDetailRequest(token, id).then((response) => {
+                if(response.data.status == 200) {
+                    this.setState({data: response.data.data})    
+                }
             })
         })
     }
 	
   	render() {
-		const {navigate} = this.props.navigation;
+        const img = 'https://ship-server-rczvh.run.goorm.io' + this.state.data.main_img
     	return (
-             <base.Container>
-                <base.Content padder>
-                    <base.Card transparent>
-                        <base.CardItem style={{borderWidth:1}}>
-                            <base.Left/>
-                            <base.Body style={{alignItems:'center',justifyContent:'center'}}>
-                                <Text style={{marginBottom:'10%'}}>{this.state.title}</Text>
-                            </base.Body>
-                            <base.Right/>
-                        </base.CardItem>
-                        <base.CardItem cardBody>
-                            <Image source={{uri:'https://ship-server-rczvh.run.goorm.io/'+this.state.post_img + '/'}} resizeMode='contain' style={{height:300, flex: 1,borderWidth:1}}/>
-                        </base.CardItem>
-                        <base.CardItem style={{borderWidth:1}}>
-                            <base.Left/>
-                            <base.Body>
-                                <Text>{this.state.post_text}</Text>
-                            </base.Body>
-                            <base.Right/>
-                        </base.CardItem>
-                    </base.Card>
-                </base.Content>
+            <base.Container>
+                <base.Header style={styles.header}>
+                    <base.Left>
+                        <base.Button 
+                            style = {styles.header}
+                            onPress={()=>this.props.navigation.goBack()}>
+                            <base.Icon name='ios-add'/>
+                        </base.Button>
+                    </base.Left>
+                    <base.Body><base.Title style={styles.header_title}>보트 정보</base.Title></base.Body>
+                    <base.Right/>
+                </base.Header>
+                <base.Card style={{alignItems: 'center', justifyContent: 'center'}}>
+                    <Image source={{uri :img}}
+                           resizeMode='contain'
+                           style={styles.img}/>
+                    <base.CardItem>
+                        <base.Body style={{alignItems: 'center', justifyContent: 'center'}}>
+                            <base.Text>{this.state.data.name}</base.Text>
+                            <base.Text>{this.state.data.imo}</base.Text>
+                            <base.Text>{this.state.data.mmsi}</base.Text>
+                            <base.Text>{this.state.data.vessel_type}</base.Text>
+                            <base.Text>{this.state.data.build_year}</base.Text>
+                            <base.Text>{this.state.data.current_flag}</base.Text>
+                            <base.Text>{this.state.data.home_port}</base.Text>
+                        </base.Body>
+                    </base.CardItem>
+                </base.Card>
             </base.Container>
     	);
   	}
@@ -70,9 +76,17 @@ export default class DetailScreen extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: 'white',
-    	flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
+        flex: 1
 	},
+    header: {
+        backgroundColor: '#006EEE',  
+    },
+    header_title: {
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    img: {
+        width: 150,
+        height: 130,
+    },
 });

@@ -24,15 +24,16 @@ export default class ResultScreen extends Component {
 	componentWillMount(){}
 	
     requestBoatData() {
-		const title = this.props.navigation.getParam('title')
-		const price = this.props.navigation.getParam('price')
-		const reserve = this.props.navigation.getParam('reserve')
-		const product_status = this.props.navigation.getParam('product_status')
-		const manufacturer = this.props.navigation.getParam('manufacturer')
-		const brand = this.props.navigation.getParam('brand')
-		const model_code = this.props.navigation.getParam('model_code')
+		const name = this.props.navigation.getParam('name')
+		const imo = this.props.navigation.getParam('imo')
+		const calsign = this.props.navigation.getParam('calsign')
+		const mmsi = this.props.navigation.getParam('mmsi')
+		const vessel_type = this.props.navigation.getParam('vessel_type')
+		const build_year = this.props.navigation.getParam('build_year')
+		const current_flag = this.props.navigation.getParam('current_flag')
+        const home_port = this.props.navigation.getParam('home_port')
 		getToken().then((token) => {
-            boatRequest(token, title, price, reserve, product_status, manufacturer, brand, model_code).then((response) => {
+            boatRequest(token, name, imo, calsign, mmsi, vessel_type, build_year, current_flag, home_port).then((response) => {
             if(response.status == 200){
 				console.log('success')
 				console.log(this.state.title)
@@ -48,7 +49,11 @@ export default class ResultScreen extends Component {
     	return (
             <base.Container>
                 <base.Header style={styles.header}>
-                    <base.Left><base.Icon name='ios-add'/></base.Left>
+                    <base.Left>
+                        <base.Button onPress={()=>this.props.navigation.goBack()}>
+                            <base.Icon name='ios-add'/>
+                        </base.Button>
+                    </base.Left>
                     <base.Body><base.Title style={styles.header_title}>등록보트 DB</base.Title></base.Body>
                     <base.Right/>
                 </base.Header>

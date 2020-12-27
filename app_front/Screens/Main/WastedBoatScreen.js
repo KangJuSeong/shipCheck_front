@@ -5,24 +5,27 @@ import * as Location from 'expo-location';
 import {WastedBoatRequest} from '../../utils/dataRequest'
 import {getToken} from '../../utils/getToken'
 import * as base from 'native-base'
+
+
 export default class WastedBoatScreen extends Component {
 	constructor(props){
         super(props)
 		this.state= {
-			latitude: '0',
-			longitude: '0',
+			latitude: '',
+			longitude: '',
 			wastedBoatData: [],
 		}
-		this.getLocation = this.getLocation(this);
+		this.getLocation = this.getLocation.bind(this);
 		this.requestBoatData = this.requestBoatData(this);
 	}
-	componentWillMount() {
+	componentDidMount() {
+        this.getLocation()
 	}
 	getLocation = async () => {
 		try {
 			const response = await Location.requestPermissionsAsync();
 			const location = await Location.getCurrentPositionAsync();
-			this.setState({latitude: location.coords['latitude'], longitude: location.coords['longitude']})
+			await this.setState({latitude: location.coords['latitude'], longitude: location.coords['longitude']})
 		} catch (error) {
 		  Alert.alert("Can't find you.", "Please Try Again!")
 		}
@@ -32,7 +35,6 @@ export default class WastedBoatScreen extends Component {
             WastedBoatRequest(token).then((response) => {
             if(response.status == 200){
 				console.log('success')
-				console.log(response.data.data[0].latitude)
 				this.setState({wastedBoatData: this.state.wastedBoatData.concat(response.data.data)})
             }
             else{
@@ -50,42 +52,50 @@ export default class WastedBoatScreen extends Component {
 							longitude: parseFloat(wastedBoat.longitude),
 							}}
 							title={wastedBoat.title}
-							onPress={()=>this.props.navigation.openDrawer()}
 				/>)
 			})
 		}
-    	return (
-			<base.Container>
-                <base.Header style={styles.header}>
-                    <base.Left>
-                        <base.Button 
-                            style = {styles.header}
-                            onPress={()=>this.props.navigation.goBack()}>
-							<base.Icon name='ios-add'/>
-						</base.Button>
-                    </base.Left>
-                    <base.Body>
-                        <base.Title style={styles.header_title}>유기,폐선박DB</base.Title>
-                    </base.Body>
-                    <base.Right>
-                    </base.Right>
-                </base.Header>
-				<View style={styles.container}>
-					<MapView
-						provider={PROVIDER_GOOGLE}
-						style={{flex: 1}}
-						initialRegion={{
-								latitude: this.state.latitude,
-								longitude: this.state.longitude,
-								latitudeDelta: 0.0922,
-								longitudeDelta: 0.0421,
-							}}
-						>
-						{ mapToComponent(this.state.wastedBoatData) }
-					</MapView>
-				</View>
-            </base.Container>
-    	);
+        if(this.state.latitude == ''){
+            return(
+                <View style={{alignItems:'center', justifyContent: 'center', flex: 1}}>
+                    <Text>위치 가져오는중</Text>
+                </View>
+            )
+        }
+        else{
+            return (
+                <base.Container>
+                    <base.Header style={styles.header}>
+                        <base.Left>
+                            <base.Button 
+                                style = {styles.header}
+                                onPress={()=>this.props.navigation.goBack()}>
+                                <base.Icon name='ios-add'/>
+                            </base.Button>
+                        </base.Left>
+                        <base.Body>
+                            <base.Title style={styles.header_title}>유기,폐선박DB</base.Title>
+                        </base.Body>
+                        <base.Right>
+                        </base.Right>
+                    </base.Header>
+                    <View style={styles.container}>
+                        <MapView
+                            provider={PROVIDER_GOOGLE}
+                            style={{flex: 1}}
+                            initialRegion={{
+                                    latitude: parseFloat(this.state.latitude),
+                                    longitude: parseFloat(this.state.longitude),
+                                    latitudeDelta: 1.0,
+                                    longitudeDelta: 1.0,
+                                }}
+                            >
+                            { mapToComponent(this.state.wastedBoatData) }
+                        </MapView>
+                    </View>
+                </base.Container>
+            );    
+        }
   	}
 }
 const styles = StyleSheet.create({

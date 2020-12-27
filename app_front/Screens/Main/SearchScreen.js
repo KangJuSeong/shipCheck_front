@@ -6,26 +6,28 @@ export default class SearchScreen extends Component {
 	constructor(props){
 		super(props)
 			this.state = {
-                title: '',
-                price: '',
-                reserve: '',
-                product_status: '',
-                manufacturer: '',
-                brand: '',
-                model_code: '',   
+                name: '',
+                imo: '',
+                calsign: '',
+                mmsi: '',
+                vessel_type: '',
+                build_year: '',
+                current_flag: '',
+                home_port: '',
 			}
 		this.postBoatData = this.postBoatData.bind(this)
 	}
 	componentDidMount(){}
     postBoatData(){
 		this.props.navigation.navigate('Result',{
-			title: this.state.title,
-			price: this.state.price,
-			reserve: this.state.reserve,
-			product_status: this.state.product_status,
-			manufacturer: this.state.manufacturer,
-			brand: this.state.brand,
-			model_code: this.state.model_code,
+			name: this.state.name,
+			imo: this.state.imo,
+			calsign: this.state.calsign,
+			mmsi: this.state.mmsi,
+			vessel_type: this.state.vessel_type,
+			build_year: this.state.build_year,
+			current_flag: this.state.current_flag,
+            home_port: this.state.home_port,
 		})
 	}
   	render() {
@@ -51,37 +53,42 @@ export default class SearchScreen extends Component {
 				<TextInput
 					style={styles.searchInput}
 					placeholder="선박명"
-					onChangeText={ (title) => this.setState({ title }) }
+					onChangeText={ (name) => this.setState({ name }) }
 				/>
 				<TextInput
 					style={styles.searchInput}
-					placeholder="가격"
-					onChangeText={ (price) => this.setState({ price }) }
+					placeholder="IMO"
+					onChangeText={ (imo) => this.setState({ imo }) }
 				/>
 				<TextInput
 					style={styles.searchInput}
-					placeholder="적립금"
-					onChangeText={ (reserve) => this.setState({ reserve }) }
+					placeholder="CALSIGN"
+					onChangeText={ (calsign) => this.setState({ calsign }) }
 				/>
 				<TextInput
 					style={styles.searchInput}
-					placeholder="제품상태"
-					onChangeText={ (product_status) => this.setState({ product_status }) }
+					placeholder="MMSI"
+					onChangeText={ (mmsi) => this.setState({ mmsi }) }
 				/>
 				<TextInput
 					style={styles.searchInput}
-					placeholder="제조사"
-					onChangeText={ (manufacturer) => this.setState({ manufacturer }) }
+					placeholder="VESSEL TYPE"
+					onChangeText={ (vessel_type) => this.setState({ vessel_type }) }
 				/>
 				<TextInput
 					style={styles.searchInput}
-					placeholder="브랜드"
-					onChangeText={ (brand) => this.setState({ brand }) }
+					placeholder="BUILD YEAR"
+					onChangeText={ (build_year) => this.setState({ build_year }) }
 				/>
 				<TextInput
 					style={styles.searchInput}
-					placeholder="모델 코드"
-					onChangeText={ (model_code) => this.setState({model_code}) }
+					placeholder="CURRENT FLAG"
+					onChangeText={ (current_flag) => this.setState({current_flag}) }
+				/>
+                <TextInput
+					style={styles.searchInput}
+					placeholder="HOME PORT"
+					onChangeText={ (home_port) => this.setState({home_port}) }
 				/>
             </base.Container> 
     	);
@@ -110,6 +117,7 @@ const styles = StyleSheet.create({
 		borderColor: "gray",
 		borderBottomWidth: 1,
 		backgroundColor: 'white',
+        flex: 1,
 	},
     btn: {
         backgroundColor: '#006EEE',

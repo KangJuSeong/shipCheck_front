@@ -2,16 +2,17 @@ import axios from 'axios'
 import {AsyncStorage} from 'react-native'
 import {request} from './request'
 
-export const boatRequest = (token, title, price, reserve, product_status, manufacturer, brand, model_code) => 
+export const boatRequest = (token, name, imo, calsign, mmsi, vessel_type, build_year, current_flag, home_port) => 
     request.post('/Boats/boat/searching/',
 		{
-			title: title,
-			price: price,
-			reserve: reserve,
-			product_status: product_status,
-			manufacturer: manufacturer,
-			brand: brand,
-			model_code: model_code,
+			name: name,
+			imo: imo,
+			calsign: calsign,
+			mmsi: mmsi,
+			vessel_type: vessel_type,
+			build_year: build_year,
+			current_flag: current_flag,
+            home_port: home_port,
 		},
         {
         headers: {
@@ -44,8 +45,11 @@ export const WastedBoatDetailRequest = (token, dataid) =>
         }
     })
 
-export const InfoRequest = (token) => 
-    request.post('아직안짰어요 주성이 여드름마냥', {},
+export const boatDetailRequest = (token, id) => 
+    request.post('/Boats/boat/detail/',
+        {
+            id: id
+        },
         {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,

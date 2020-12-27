@@ -59,11 +59,6 @@ export default class LoginScreen extends Component {
                     </base.Item>
                 </base.Form>
                 <View style={styles.btn_container}>
-					<TouchableHighlight
-                        onPress={()=>this.props.navigation.navigate('Register')}
-                        style={styles.logout}>
-                        <Text style={styles.logout_txt}>TEST</Text>
-                    </TouchableHighlight>
                     <TouchableHighlight
                         onPress={this.requestLogin}
                         style={styles.login}>

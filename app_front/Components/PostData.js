@@ -9,7 +9,7 @@ export default class PostData extends Component {
     	super(props);
 	}
 	render() {
-		const img = 'https://ship-server-rczvh.run.goorm.io/' + this.props.post.boat_img
+		const img = 'https://ship-server-rczvh.run.goorm.io/' + this.props.post.main_img
 		return (
 			<TouchableHighlight onPress={this.props.onPress}>
                 <base.Card>
@@ -21,9 +21,9 @@ export default class PostData extends Component {
                                 style={styles.img} />
                         </base.Left>
                         <base.Body>
-                            <Text style={styles.txt}>{this.props.post.title}</Text>
-                            <Text style={styles.txt}>{this.props.post.price}원</Text>
-                            <Text style={styles.txt}>{this.props.post.manufacturer}</Text>
+                            <Text style={styles.txt}>{this.props.post.name}</Text>
+                            <Text style={styles.txt}>{this.props.post.imo}</Text>
+                            <Text style={styles.txt}>{this.props.post.mmsi}</Text>
                         </base.Body>
                     </base.CardItem>
                 </base.Card>
