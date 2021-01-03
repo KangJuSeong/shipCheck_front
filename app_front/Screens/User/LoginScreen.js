@@ -41,7 +41,7 @@ export default class LoginScreen extends Component {
                 <Image
                     resizeMode='contain'
                     style={styles.main_logo}
-                    source={require('/workspace/app_front/assets/main_logo.png')}/>
+                    source={require('/workspace/shipCheck_front/app_front/assets/main_logo.png')}/>
                 <Text style={styles.txt_1}>보트정보</Text>
                 <Text style={styles.txt_2}>확인체계</Text>
                 <base.Form style={styles.input}>

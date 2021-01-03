@@ -57,3 +57,43 @@ export const boatDetailRequest = (token, id) =>
             'Content-Type': 'application/json',
         }
     })
+
+export const registNormalRequest = (token, name, imo, calsign, mmsi, vessel_type, build_year, current_flag, home_port, image_data) => 
+    request.post('/Boats/boat/regist/',
+        {
+            flag: 'Normal',
+            name: name,
+            imo: imo,
+            calsign: calsign,
+            mmsi: mmsi,
+            vessel_type: vessel_type,
+            build_year: build_year,
+            current_flag: current_flag,
+            home_port: home_port,
+            image_data: image_data
+        },
+        {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+
+export const registWastedRequest = (token, latitude, longitude, detail, title, image_data) => 
+    request.post('/Boats/boat/regist/',
+        {
+            flag: 'Wasted',
+            latitude: latitude,
+            longitude: longitude,
+            detail: detail,
+            title: title,
+            image_data: image_data
+        },
+        {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
