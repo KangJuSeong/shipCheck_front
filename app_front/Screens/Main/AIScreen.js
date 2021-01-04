@@ -12,7 +12,8 @@ export default class AIScreen extends Component {
         super(props)
         this.state = {
             uri : '',
-            base64 : ''
+            base64 : '',
+            data: []
         }
         this.camera = this.camera.bind(this)
         this.predictRequest = this.predictRequest.bind(this)
@@ -25,7 +26,7 @@ export default class AIScreen extends Component {
         await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [1, 1],
             quality: 1,
         }).then((result) => {
             this.setState({uri : result.uri})
@@ -44,10 +45,12 @@ export default class AIScreen extends Component {
             predictBoat(token, this.state.base64).then((response) => {
                 if(response.status == 200) {
                     console.log('success')
+                    console.log(response.data.data)
                 }
             })
         })
     }
+    
     
   	render() {
 		const {navigate} = this.props.navigation;
@@ -58,7 +61,7 @@ export default class AIScreen extends Component {
                         <base.Button 
                             style = {styles.header}
                             onPress={()=>this.props.navigation.goBack()}>
-							<base.Icon name='ios-add'/>
+							<Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
 						</base.Button>
                     </base.Left>
                     <base.Body>
@@ -67,22 +70,23 @@ export default class AIScreen extends Component {
                     <base.Right>
                     </base.Right>
                 </base.Header>
-                <Image
-                    style={styles.img}
-                    source={{uri:this.state.uri}}
-                    resizeMode='contain'
-                    />
-                <TouchableHighlight
-                    style={styles.btn}
-                    onPress={this.camera}>
-                    <Text>선박 사진 촬영</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                    style={styles.btn}
-                    onPress={this.predictRequest}>
-                    <Text>선박 인식하기</Text>
-                </TouchableHighlight>
-                
+                <View style={{justifyContent:'center', alignItems:'center'}}>
+                    <Image
+                        style={styles.img}
+                        source={{uri:this.state.uri}}
+                        resizeMode='contain'
+                        />
+                    <TouchableHighlight
+                        style={styles.btn}
+                        onPress={this.camera}>
+                        <Text>선박 사진 촬영</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                        style={styles.btn}
+                        onPress={this.predictRequest}>
+                        <Text>선박 인식하기</Text>
+                    </TouchableHighlight>
+                </View>
             </base.Container>
     	);
   	}
@@ -97,12 +101,26 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: '#006EEE',  
     },
+    header_title: {
+        color: 'white',
+        fontWeight: 'bold'
+    },
     btn: {
-        marginTop: '30%',
-        marginLeft: '30%'
+        marginTop: '12%',
+        backgroundColor: '#006EEE',
+        width: '90%',
+        height: '10%',
+        borderRadius: 10,
+        alignItems: 'center',
+        borderWidth: 1,
+        justifyContent: 'center',
+        borderColor: '#FFFFFF'
     },
     img: {
-        width: '100%',
+        marginTop: '10%',
+        width: '90%',
         height: 300,
+        borderRadius: 10,
+        borderWidth: 2,
     }
 });
