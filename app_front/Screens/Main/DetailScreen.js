@@ -39,7 +39,7 @@ export default class DetailScreen extends Component {
     }
 	
   	render() {
-        const img = 'https://ship-server-rczvh.run.goorm.io' + this.state.data.main_img
+        const img = 'https://shipcheck-server-vrxqx.run.goorm.io' + this.state.data.main_img
     	return (
             <base.Container>
                 <base.Header style={styles.header}>
@@ -47,8 +47,8 @@ export default class DetailScreen extends Component {
                         <base.Button 
                             style = {styles.header}
                             onPress={()=>this.props.navigation.goBack()}>
-                            <base.Icon name='ios-add'/>
-                        </base.Button>
+							<Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
+						</base.Button>
                     </base.Left>
                     <base.Body><base.Title style={styles.header_title}>보트 정보</base.Title></base.Body>
                     <base.Right/>
@@ -59,13 +59,13 @@ export default class DetailScreen extends Component {
                            style={styles.img}/>
                     <base.CardItem>
                         <base.Body style={{alignItems: 'center', justifyContent: 'center'}}>
-                            <base.Text>{this.state.data.name}</base.Text>
-                            <base.Text>{this.state.data.imo}</base.Text>
-                            <base.Text>{this.state.data.mmsi}</base.Text>
-                            <base.Text>{this.state.data.vessel_type}</base.Text>
-                            <base.Text>{this.state.data.build_year}</base.Text>
-                            <base.Text>{this.state.data.current_flag}</base.Text>
-                            <base.Text>{this.state.data.home_port}</base.Text>
+                            <base.Text>선박명 : {this.state.data.name}</base.Text>
+                            <base.Text>IMO : {this.state.data.imo}</base.Text>
+                            <base.Text>MMSI : {this.state.data.mmsi}</base.Text>
+                            <base.Text>선박 유형 : {this.state.data.vessel_type}</base.Text>
+                            <base.Text>제작 년도 : {this.state.data.build_year}</base.Text>
+                            <base.Text>소속 국가 : {this.state.data.current_flag}</base.Text>
+                            <base.Text>소속 항구 : {this.state.data.home_port}</base.Text>
                         </base.Body>
                     </base.CardItem>
                 </base.Card>

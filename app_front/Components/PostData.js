@@ -21,9 +21,9 @@ export default class PostData extends Component {
                                 style={styles.img} />
                         </base.Left>
                         <base.Body>
-                            <Text style={styles.txt}>{this.props.post.name}</Text>
-                            <Text style={styles.txt}>{this.props.post.imo}</Text>
-                            <Text style={styles.txt}>{this.props.post.mmsi}</Text>
+                            <Text style={styles.txt}>선박명 : {this.props.post.name}</Text>
+                            <Text style={styles.txt}>IMO : {this.props.post.imo}</Text>
+                            <Text style={styles.txt}>소속 국가 : {this.props.post.current_flag}</Text>
                         </base.Body>
                     </base.CardItem>
                 </base.Card>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, StatusBar, FlatList, TouchableHighlight, TextInput} from 'react-native';
+import { StyleSheet, Text, View, Button, StatusBar, FlatList, TouchableHighlight, TextInput, Image} from 'react-native';
 import axios from 'axios';
 import * as base from 'native-base';
 export default class SearchScreen extends Component {
@@ -38,18 +38,12 @@ export default class SearchScreen extends Component {
                         <base.Button 
                             style = {styles.header}
                             onPress={()=>this.props.navigation.goBack()}>
-							<base.Icon name='ios-add'/>
+							<Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
 						</base.Button>
                     </base.Left>
                     <base.Body><base.Title style={styles.header_title}>등록보트 DB</base.Title></base.Body>
                     <base.Right/>
                 </base.Header>
-                <TouchableHighlight
-                        onPress={this.postBoatData}
-                        style={styles.btn}>
-                        <Text>검색</Text>
-                </TouchableHighlight>
-				
 				<TextInput
 					style={styles.searchInput}
 					placeholder="선박명"
@@ -90,6 +84,11 @@ export default class SearchScreen extends Component {
 					placeholder="HOME PORT"
 					onChangeText={ (home_port) => this.setState({home_port}) }
 				/>
+                <TouchableHighlight
+                        onPress={this.postBoatData}
+                        style={styles.btn}>
+                        <Text style={styles.header_title}>검색</Text>
+                </TouchableHighlight>
             </base.Container> 
     	);
   	}
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     btn: {
         backgroundColor: '#006EEE',
         width: '100%',
-        height: '20%',
+        height: '10%',
         borderRadius: 4,
         alignItems: 'center',
         borderWidth: 1,

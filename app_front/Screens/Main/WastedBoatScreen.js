@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, StatusBar, ScrollView, Alert, TouchableHighlight, Linking } from 'react-native';
+import { StyleSheet, Text, View, Button, StatusBar, ScrollView, Alert, TouchableHighlight, Linking, Image} from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import {WastedBoatRequest} from '../../utils/dataRequest'
@@ -70,9 +70,9 @@ export default class WastedBoatScreen extends Component {
                             <base.Button 
                                 style = {styles.header}
                                 onPress={()=>this.props.navigation.goBack()}>
-                                <base.Icon name='ios-add'/>
+                                <Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
                             </base.Button>
-                        </base.Left>
+                    </base.Left>
                         <base.Body>
                             <base.Title style={styles.header_title}>유기,폐선박DB</base.Title>
                         </base.Body>

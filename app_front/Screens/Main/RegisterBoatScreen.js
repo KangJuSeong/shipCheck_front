@@ -43,7 +43,7 @@ export default class RegisterBoatScreen extends Component {
         await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [1, 1],
             quality: 1,
         }).then((result) => {
             this.setState({uri : result.uri})
@@ -64,13 +64,13 @@ export default class RegisterBoatScreen extends Component {
         await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [1, 1],
             quality: 1,
         }).then((result) => {
             this.setState({uri : result.uri})
             ImageManipulator.manipulateAsync(
                 result.localUri || result.uri,
-                [{resize: {width: 50, height:50}}],
+                [{resize: {width: 100, height: 100}}],
                 { base64: true, format: ImageManipulator.SaveFormat.JPEG }
                 ).then((result) => {
                     this.setState({base64 : result.base64})
@@ -117,7 +117,7 @@ export default class RegisterBoatScreen extends Component {
                                 <base.Button 
                                     style = {styles.header}
                                     onPress={()=>this.props.navigation.goBack()}>
-                                    <base.Icon name='ios-add'/>
+                                    <Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
                                 </base.Button>
                             </base.Left>
                             <base.Body>
@@ -127,7 +127,6 @@ export default class RegisterBoatScreen extends Component {
                         </base.Header>
                         <View style={{ height: '30%', width: '100%', borderRadius: 10, borderWidth: 1, borderColor: 'black', alignItems:"center", justifyContent:'center',}}>
                             <Image
-                                resizeMode='contain'
                                 style={{ resizeMode:'contain', width:"100%", height: "90%"}}
                                 source={{uri : this.state.uri}}/>
                             <base.Button
@@ -138,7 +137,7 @@ export default class RegisterBoatScreen extends Component {
                                         cancelButtonIndex: 2,
                                         title: "Selected"},
                                         buttonIndex => {buttonIndex==0 ? this.pickCamera():this.pickImage()})}}>
-                                <Text>+</Text>
+                                <Image source={require('/workspace/shipCheck_front/app_front/assets/icons/_add.png')}/>
                             </base.Button>
 					    </View>
                         <DropDownPicker
@@ -150,8 +149,9 @@ export default class RegisterBoatScreen extends Component {
                             itemStyle={{justifyContent: 'flex-start'}}
                             onChangeItem={item => this.setState({hand: item.value})}/>
                         <ScrollView>
-                            <View style={{justifyContent:'center'}}>
+                            <View>
                                 <CustomInput
+                                    style={styles.input}
                                     label='NAME'
                                     onChangeText={(text)=>this.setState({name:text})}/>
                                 <CustomInput
@@ -175,10 +175,12 @@ export default class RegisterBoatScreen extends Component {
                                 <CustomInput
                                     label='HOME PORT'
                                     onChangeText={(text)=>this.setState({home_port:text})}/>
-                                <TouchableHighlight style={styles.btn}
-                                    onPress={() => this.requestRegistBoat('Normal')}>
-                                    <Text>등록</Text>
-                                </TouchableHighlight>
+                                <View style={{justifyContent:'center', alignItems:'center', marginTop:'5%'}}>
+                                    <TouchableHighlight style={styles.btn}
+                                        onPress={() => this.requestRegistBoat('Normal')}>
+                                        <Text>등록</Text>
+                                    </TouchableHighlight>
+                                </View>
                             </View>
                         </ScrollView>
                     </base.Container>
@@ -192,7 +194,7 @@ export default class RegisterBoatScreen extends Component {
                             <base.Button 
                                 style = {styles.header}
                                 onPress={()=>this.props.navigation.goBack()}>
-                                <base.Icon name='ios-add'/>
+                                <Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
                             </base.Button>
                         </base.Left>
                         <base.Body>
@@ -213,7 +215,7 @@ export default class RegisterBoatScreen extends Component {
                                     cancelButtonIndex: 2,
                                     title: "Selected"},
                                     buttonIndex => {buttonIndex==0 ? this.pickCamera():this.pickImage()})}}>
-                            <Text>+</Text>
+                            <Image source={require('/workspace/shipCheck_front/app_front/assets/icons/_add.png')}/>
                         </base.Button>
                     </View>
                     <DropDownPicker
@@ -232,16 +234,18 @@ export default class RegisterBoatScreen extends Component {
                             <CustomInput
                                 label='DETAIL'
                                 onChangeText={(text)=>this.setState({detail:text})}/>
-                            <TouchableHighlight style={styles.btn}
-                                onPress={this.getCurrentLocation}>
-                                <Text>현재 위치 가져오기</Text>
-                            </TouchableHighlight>
-                            <Text>{this.state.latitude}</Text>
-                            <Text>{this.state.longitude}</Text>
-                            <TouchableHighlight style={styles.btn}
-                                onPress={()=>this.requestRegistBoat('Wasted')}>
-                                <Text>등록</Text>
-                            </TouchableHighlight>
+                            <View style={{justifyContent:'center', alignItems:'center', marginTop:'5%'}}>
+                                <TouchableHighlight style={styles.btn}
+                                    onPress={this.getCurrentLocation}>
+                                    <Text>현재 위치 가져오기</Text>
+                                </TouchableHighlight>
+                                <Text>{this.state.latitude}</Text>
+                                <Text>{this.state.longitude}</Text>
+                                <TouchableHighlight style={styles.btn}
+                                    onPress={()=>this.requestRegistBoat('Wasted')}>
+                                    <Text>등록</Text>
+                                </TouchableHighlight>
+                            </View>
                         </View>
                     </ScrollView>
                 </base.Container>
@@ -251,23 +255,7 @@ export default class RegisterBoatScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-	input:{
-		margin: 5,
-		width: '90%',
-		height: "5%",
-		fontSize: 25,
-		borderColor: "gray",
-		borderWidth: 1,
-		borderRadius: 5,
-		alignItems: "center",
-		justifyContent: 'center',
-	},
-	inputTitle:{
-		marginLeft: 5,
-		fontSize: 15
-	},
 	btn:{
-		margin: 5,
         backgroundColor: '#006EEE',
         width: '90%',
         height: 50,
@@ -287,5 +275,12 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         right: '5%',
         bottom: '5%'
-    }
+    },
+    header: {
+        backgroundColor: '#006EEE',  
+    },
+    header_title: {
+        color: 'white',
+        fontWeight: 'bold'
+    },
 });

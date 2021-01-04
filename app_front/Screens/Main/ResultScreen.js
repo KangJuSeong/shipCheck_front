@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, StatusBar, FlatList, TouchableHighlight} from 'react-native';
+import { StyleSheet, Text, View, Button, StatusBar, FlatList, TouchableHighlight, Image} from 'react-native';
 import axios from 'axios';
 import * as base from 'native-base';
 import PostData from '../../Components/PostData'
@@ -50,9 +50,11 @@ export default class ResultScreen extends Component {
             <base.Container>
                 <base.Header style={styles.header}>
                     <base.Left>
-                        <base.Button onPress={()=>this.props.navigation.goBack()}>
-                            <base.Icon name='ios-add'/>
-                        </base.Button>
+                        <base.Button 
+                            style = {styles.header}
+                            onPress={()=>this.props.navigation.goBack()}>
+							<Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
+						</base.Button>
                     </base.Left>
                     <base.Body><base.Title style={styles.header_title}>등록보트 DB</base.Title></base.Body>
                     <base.Right/>
