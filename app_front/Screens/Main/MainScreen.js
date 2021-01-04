@@ -45,7 +45,7 @@ export default class MainScreen extends Component {
                     <base.Card style={styles.card}>
                         <base.CardItem button
                             style={styles.cardItem}
-                            onPress={()=>this.props.navigation.navigate('Lost')}>
+                            onPress={()=>this.props.navigation.navigate('AI')}>
                             <base.Icon name='home'/>
                             <base.Text>AI 검색</base.Text>
                         </base.CardItem>

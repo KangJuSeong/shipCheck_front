@@ -9,7 +9,7 @@ export default class PostData extends Component {
     	super(props);
 	}
 	render() {
-		const img = 'https://ship-server-rczvh.run.goorm.io/' + this.props.post.main_img
+		const img = 'https://shipcheck-server-vrxqx.run.goorm.io/' + this.props.post.main_img
 		return (
 			<TouchableHighlight onPress={this.props.onPress}>
                 <base.Card>
