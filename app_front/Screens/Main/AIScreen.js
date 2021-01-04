@@ -40,16 +40,26 @@ export default class AIScreen extends Component {
         })
     }
     
-    predictRequest() {
-        getToken().then((token) => {
-            predictBoat(token, this.state.base64).then((response) => {
-                if(response.status == 200) {
+    // async predictRequest() {
+    //     getToken().then((token) => {
+    //         predictBoat(token, this.state.base64).then((response)=>{
+    //             if(response.status == 200) {
+    //                 console.log('success')
+    //             }
+    //         }).catch((error) => {
+    //             console.log(error)
+    //         })
+    //     })
+    // }
+    async predictRequest() {
+        const token = await getToken()
+        await predictBoat(token, this.state.base64).then((response)=>{
+                if(response.status==200){
                     console.log('success')
-                    console.log(response.data.data)
                 }
             })
-        })
     }
+    
     
     
   	render() {
