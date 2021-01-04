@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, StatusBar, TouchableHighlight, AsyncStorage, Image, TextInput, ScrollView} from 'react-native';
 import { Container, Content, Spinner } from 'native-base';
-import * as base from 'native-base'
-import {InfoRequest} from '../../utils/dataRequest'
-import {getToken} from '../../utils/getToken'
+import * as base from 'native-base';
+import {registNormalRequest, registWastedRequest} from '../../utils/dataRequest'
+import {getToken} from '../../utils/getToken';
 import * as ImageManipulator from 'expo-image-manipulator';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomInput from '../../Components/CustomInput';
 import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
 
+
+const BUTTONS = ["Camera", "Photo", "Cancel"]
 export default class RegisterBoatScreen extends Component {
     constructor(props) {
         super(props)
@@ -32,6 +35,8 @@ export default class RegisterBoatScreen extends Component {
 		}
         this.pickImage = this.pickImage.bind(this)
         this.pickCamera = this.pickCamera.bind(this)
+        this.requestRegistBoat = this.requestRegistBoat.bind(this)
+        this.getCurrentLocation = this.getCurrentLocation.bind(this)
     }
     
     async pickImage() {
@@ -42,6 +47,13 @@ export default class RegisterBoatScreen extends Component {
             quality: 1,
         }).then((result) => {
             this.setState({uri : result.uri})
+            ImageManipulator.manipulateAsync(
+                result.localUri || result.uri,
+                [{resize: {width: 50, height:50}}],
+                { base64: true, format: ImageManipulator.SaveFormat.JPEG }
+                ).then((result) => {
+                    this.setState({base64 : result.base64})
+            })
         })
     }
     
@@ -56,7 +68,44 @@ export default class RegisterBoatScreen extends Component {
             quality: 1,
         }).then((result) => {
             this.setState({uri : result.uri})
+            ImageManipulator.manipulateAsync(
+                result.localUri || result.uri,
+                [{resize: {width: 50, height:50}}],
+                { base64: true, format: ImageManipulator.SaveFormat.JPEG }
+                ).then((result) => {
+                    this.setState({base64 : result.base64})
+            })
         })
+    }
+    
+    requestRegistBoat(flag) {
+        getToken().then((token) => {
+            if(flag == 'Normal') {
+                registNormalRequest(token, this.state.name, this.state.imo, this.state.calsign, this.state.mmsi, this.state.vessel_type, this.state.build_year, this.state.current_flag, this.state.home_port, this.state.base64).then((response) => {
+                    if(response.status == 200) {
+                        this.props.navigation.goBack()
+                    }
+                })
+            }
+            else {
+                registWastedRequest(token, this.state.latitude, this.state.longitude, this.state.detail, this.state.title, this.state.base64).then((response) => {
+                    if(response.status == 200) {
+                        this.props.navigation.goBack()
+                    }
+                })
+                
+            }
+        })
+    }
+    
+    async getCurrentLocation() {
+        try {
+			const response = await Location.requestPermissionsAsync();
+			const location = await Location.getCurrentPositionAsync();
+			await this.setState({latitude: location.coords['latitude'], longitude: location.coords['longitude']})
+		} catch (error) {
+		  Alert.alert("Can't find you.", "Please Try Again!")
+		}
     }
     
   	render() {
@@ -86,10 +135,9 @@ export default class RegisterBoatScreen extends Component {
                                 onPress={() => {
                                     base.ActionSheet.show({
                                         options: BUTTONS,
-                                        cancelButtonIndex: CANCEL_INDEX,
-                                        destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                                        title: "Testing ActionSheet"},
-                                        buttonIndex => { this.setState({ clicked: BUTTONS[buttonIndex] })})}}>
+                                        cancelButtonIndex: 2,
+                                        title: "Selected"},
+                                        buttonIndex => {buttonIndex==0 ? this.pickCamera():this.pickImage()})}}>
                                 <Text>+</Text>
                             </base.Button>
 					    </View>
@@ -128,7 +176,7 @@ export default class RegisterBoatScreen extends Component {
                                     label='HOME PORT'
                                     onChangeText={(text)=>this.setState({home_port:text})}/>
                                 <TouchableHighlight style={styles.btn}
-                                    onPress={()=>this.props.navigation.goBack()}>
+                                    onPress={() => this.requestRegistBoat('Normal')}>
                                     <Text>등록</Text>
                                 </TouchableHighlight>
                             </View>
@@ -153,11 +201,21 @@ export default class RegisterBoatScreen extends Component {
                         <base.Right/>
                     </base.Header>
                     <View style={{ height: '30%', width: '100%', borderRadius: 10, borderWidth: 1, borderColor: 'black', alignItems: "center", justifyContent: 'center',}}>
-                            <Image
-                                resizeMode='contain'
-                                style={{ resizeMode:'contain', width:"100%", height: "90%"}}
-                                source={require('/workspace/shipCheck_front/app_front/assets/img/boatexample.jpg')}/>
-					</View>
+                        <Image
+                            resizeMode='contain'
+                            style={{ resizeMode:'contain', width:"100%", height: "90%"}}
+                            source={{uri : this.state.uri}}/>
+                        <base.Button
+                            style={styles.add_btn}
+                            onPress={() => {
+                                base.ActionSheet.show({
+                                    options: BUTTONS,
+                                    cancelButtonIndex: 2,
+                                    title: "Selected"},
+                                    buttonIndex => {buttonIndex==0 ? this.pickCamera():this.pickImage()})}}>
+                            <Text>+</Text>
+                        </base.Button>
+                    </View>
                     <DropDownPicker
                         items={[
                             {label: '일반 선박', value: 'Normal'},
@@ -175,7 +233,13 @@ export default class RegisterBoatScreen extends Component {
                                 label='DETAIL'
                                 onChangeText={(text)=>this.setState({detail:text})}/>
                             <TouchableHighlight style={styles.btn}
-                                onPress={()=>this.props.navigation.goBack()}>
+                                onPress={this.getCurrentLocation}>
+                                <Text>현재 위치 가져오기</Text>
+                            </TouchableHighlight>
+                            <Text>{this.state.latitude}</Text>
+                            <Text>{this.state.longitude}</Text>
+                            <TouchableHighlight style={styles.btn}
+                                onPress={()=>this.requestRegistBoat('Wasted')}>
                                 <Text>등록</Text>
                             </TouchableHighlight>
                         </View>

@@ -6,10 +6,8 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import IntroScreen from './Screens/IntroScreen';
 import LostScreen from './Screens/LostScreen';
-
 import MainScreen from './Screens/Main/MainScreen';
 import RegisterBoatScreen from './Screens/Main/RegisterBoatScreen';
-
 import SearchScreen from './Screens/Main/SearchScreen';
 import AIScreen from './Screens/Main/AIScreen';
 import DetailScreen from './Screens/Main/DetailScreen';
@@ -17,13 +15,12 @@ import ResultScreen from './Screens/Main/ResultScreen';
 import WastedBoatScreen from './Screens/Main/WastedBoatScreen';
 import WastedDetailScreen from './Screens/Main/WastedDetailScreen';
 import InformationScreen from './Screens/Main/InformationScreen';
-
 import LoginScreen from './Screens/User/LoginScreen';
 import SignupScreen1 from './Screens/User/SignupScreen1';
 import SignupScreen2 from './Screens/User/SignupScreen2';
 import MainOptionScreen from './Screens/User/MainOptionScreen';
-
 import test from './Screens/Main/test';
+import { Root } from "native-base";
 
 
 const MainStack = createStackNavigator(
@@ -119,4 +116,14 @@ const Route = createStackNavigator(
     }
 )
 
-export default createAppContainer(Route);
+const Container = createAppContainer(Route)
+
+export default class App extends React.Component {
+  render() {
+    return (
+        <Root>
+            <Container/>
+        </Root>
+    )
+  }
+}
