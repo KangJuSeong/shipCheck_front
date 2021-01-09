@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, StatusBar, Image} from 'react-native';
-import * as base from 'native-base'
+import * as base from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import {getToken} from '../../utils/getToken';
-import {predictBoat} from '../../utils/dataRequest'
+import {predictBoat} from '../../utils/dataRequest';
+import * as tf from '@tensorflow/tfjs';
+import { fetch, decodeJpeg, bundleResourceIO } from '@tensorflow/tfjs-react-native';
 
 
 export default class AIScreen extends Component {
@@ -17,13 +19,24 @@ export default class AIScreen extends Component {
         }
         this.camera = this.camera.bind(this)
         this.predictRequest = this.predictRequest.bind(this)
+        this.loadModelAndPredict = this.loadModelAndPredict.bind(this)
     }
+    async loadModelAndPredict() {
+        const model = await tf.loadLayersModel('https://shipcheck-server-vrxqx.run.goorm.io/model.json')
+        const uri = 'https://shipcheck-server-vrxqx.run.goorm.io/wasted_img/5141146.jpg';
+        const response = await fetch(uri, {}, { isBinary: true })
+        console.log(response)
+        // const imageData = await response.arrayBuffer()
+        // const imageTensor = decodeJpeg(imageData)
+        // const prediction = (await model.predict(imageTnsor))[0]
+    }
+    
     
     async camera() {
         if(!ImagePicker.getCameraPermissionsAsync()) {
             ImagePicker.requestCameraPermissionsAsync()
         }
-        await ImagePicker.launchCameraAsync({
+        await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [1, 1],
@@ -93,7 +106,7 @@ export default class AIScreen extends Component {
                     </TouchableHighlight>
                     <TouchableHighlight
                         style={styles.btn}
-                        onPress={this.predictRequest}>
+                        onPress={this.loadModelAndPredict}>
                         <Text>선박 인식하기</Text>
                     </TouchableHighlight>
                 </View>
