@@ -98,7 +98,7 @@ export const registWastedRequest = (token, latitude, longitude, detail, title, i
         }
     })
 
-export const predictBoat = (token, image_data) => {
+export const predictBoat = (token, image_data) => 
     request.post('/Boats/boat/predict/',
         {
             image_data: image_data
@@ -111,4 +111,17 @@ export const predictBoat = (token, image_data) => {
             }
         }
     )
-}
+
+
+export const test = (token) => 
+    request.post('/Boats/test/', 
+        {
+        },
+        {
+            headers: {
+                'AUTHORIZATION': 'jwt ' + token,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
+    )

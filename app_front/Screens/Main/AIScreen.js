@@ -15,23 +15,16 @@ export default class AIScreen extends Component {
         this.state = {
             uri : '',
             base64 : '',
-            data: []
+            first: [],
+            second: [],
+            third: [],
+            
         }
         this.camera = this.camera.bind(this)
         this.predictRequest = this.predictRequest.bind(this)
-        this.loadModelAndPredict = this.loadModelAndPredict.bind(this)
-    }
-    async loadModelAndPredict() {
-        const model = await tf.loadLayersModel('https://shipcheck-server-vrxqx.run.goorm.io/model.json')
-        const uri = 'https://shipcheck-server-vrxqx.run.goorm.io/wasted_img/5141146.jpg';
-        const response = await fetch(uri, {}, { isBinary: true })
-        console.log(response)
-        // const imageData = await response.arrayBuffer()
-        // const imageTensor = decodeJpeg(imageData)
-        // const prediction = (await model.predict(imageTnsor))[0]
     }
     
-    
+
     async camera() {
         if(!ImagePicker.getCameraPermissionsAsync()) {
             ImagePicker.requestCameraPermissionsAsync()
@@ -45,47 +38,42 @@ export default class AIScreen extends Component {
             this.setState({uri : result.uri})
             ImageManipulator.manipulateAsync(
                 result.localUri || result.uri,
-                [{resize: {width: 50, height:50}}],
+                [{resize: {width: 224, height: 224}}],
                 { base64: true, format: ImageManipulator.SaveFormat.JPEG }
                 ).then((result) => {
-                    this.setState({base64 : result.base64})
+                    this.setState({base64 : result.base64, uri: result.uri})
             })
         })
     }
     
-    // async predictRequest() {
-    //     getToken().then((token) => {
-    //         predictBoat(token, this.state.base64).then((response)=>{
-    //             if(response.status == 200) {
-    //                 console.log('success')
-    //             }
-    //         }).catch((error) => {
-    //             console.log(error)
-    //         })
-    //     })
-    // }
     async predictRequest() {
-        const token = await getToken()
-        await predictBoat(token, this.state.base64).then((response)=>{
-                if(response.status==200){
-                    console.log('success')
-                }
-            })
+        await getToken().then(token => predictBoat(token, this.state.base64).then((response)=>{
+            if(response.status==200){
+                console.log('success')
+                console.log(response.data.data[0])
+                this.setState({first: response.data.data[0],
+                               second: response.data.data[1],
+                               third: response.data.data[2]})
+            }
+        }).catch(error => {
+            if(error.status == 500) {
+                console.log('fail')
+            }})
+        )
     }
     
     
-    
   	render() {
-		const {navigate} = this.props.navigation;
-    	return (
+        const {navigate} = this.props.navigation;
+        return (
             <base.Container>
                 <base.Header style={styles.header}>
                     <base.Left>
                         <base.Button 
                             style = {styles.header}
                             onPress={()=>this.props.navigation.goBack()}>
-							<Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
-						</base.Button>
+                            <Image source={require('/workspace/shipCheck_front/app_front/assets/icons/back.png')}/>
+                        </base.Button>
                     </base.Left>
                     <base.Body>
                         <base.Title style={styles.header_title}>AI검색</base.Title>
@@ -99,6 +87,9 @@ export default class AIScreen extends Component {
                         source={{uri:this.state.uri}}
                         resizeMode='contain'
                         />
+                    <Text>{this.state.first[0]}, {this.state.first[1]}</Text>
+                    <Text>{this.state.second[0]}, {this.state.second[1]}</Text>
+                    <Text>{this.state.third[0]}, {this.state.third[1]}</Text>
                     <TouchableHighlight
                         style={styles.btn}
                         onPress={this.camera}>
@@ -106,12 +97,12 @@ export default class AIScreen extends Component {
                     </TouchableHighlight>
                     <TouchableHighlight
                         style={styles.btn}
-                        onPress={this.loadModelAndPredict}>
+                        onPress={this.predictRequest}>
                         <Text>선박 인식하기</Text>
                     </TouchableHighlight>
                 </View>
             </base.Container>
-    	);
+        );   
   	}
 }
 
